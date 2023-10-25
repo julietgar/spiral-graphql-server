@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Idiosyncratic\Spiral\GraphQL\Server\Bootloader;
 
+use GraphQL\Language\AST\TypeDefinitionNode;
 use GraphQL\Type\Schema;
+use GraphQL\Utils\BuildSchema;
 use Idiosyncratic\Spiral\GraphQL\Server\GraphQLServerConfig;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\DirectoriesInterface;
@@ -21,24 +23,35 @@ final class GraphQLServerConfigBootloader extends Bootloader
     ) {
     }
 
-    public function init(
-        EnvironmentInterface $env,
-        DirectoriesInterface $directories,
-    ) : void {
-        $this->configurator->setDefaults(GraphQLServerConfig::CONFIG, [
-            'schema_file' => $directories->get('app') . 'schema.graphql',
-        ]);
+    public function init() : void
+    {
+        $this->configurator->setDefaults(GraphQLServerConfig::CONFIG, ['schema_file' => '']);
     }
 
     public function boot(
         BinderInterface $binder,
-        GraphQLServerConfig $config,
     ) : void {
         $binder->bindSingleton(
             Schema::class,
-            static function (GraphQLServerConfig $config) : void {
-                $schema = file_get_contents($config->getSchemaFile());
-            }
+            static function (
+                EnvironmentInterface $env,
+                GraphQLServerConfig $config,
+                DirectoriesInterface $dir,
+            ) : Schema {
+                $contents = file_get_contents($config->getSchemaFile());
+
+                $typeConfigDecorator = static function (
+                    array $typeConfig,
+                    TypeDefinitionNode $typeDefinitionNode,
+                ) : array {
+                    $name = $typeConfig['name'];
+
+                    // ... add missing options to $typeConfig based on type $name
+                    return $typeConfig;
+                };
+
+                return BuildSchema::build($contents, $typeConfigDecorator);
+            },
         );
     }
 }
