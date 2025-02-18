@@ -1,5 +1,5 @@
 {
-  "name": "idiosyncratic/spiral-graphql-server",
+  "name": "julietgar/spiral-graphql-server",
   "type": "library",
   "license": "EUPL-1.2",
   "description": "Idiosyncratic Spiral GraphQL Server",
@@ -9,7 +9,7 @@
   },
   "require": {
     "php": ">=8.2",
-    "idiosyncratic/graphql-server": "^0.3.1",
+    "julietgar/graphql-server": "dev-patch-1",
     "spiral/boot": "^3.7",
     "spiral/config": "^3.7",
     "thecodingmachine/safe": "^3.0"
