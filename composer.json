@@ -8,7 +8,7 @@
     "source": "https://github.com/idiosyncratic-code/spiral-graphql-server"
   },
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.4",
     "idiosyncratic/graphql-server": "^0.3.1",
     "spiral/boot": "^3.7",
     "spiral/config": "^3.7",
